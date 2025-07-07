@@ -2,7 +2,7 @@
   "name": "tekkdev-backend",
   "version": "1.0.0",
   "description": "��#\u0000 \u0000t\u0000e\u0000k\u0000k\u0000d\u0000e\u0000v\u0000-\u0000b\u0000a\u0000c\u0000k\u0000e\u0000n\u0000d\u0000\r\u0000 \u0000",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
@@ -21,9 +21,12 @@
   "homepage": "https://github.com/waleedejaz9/tekkdev-backend#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^17.0.1",
     "express": "^5.1.0",
     "mongoose": "^8.16.1",
     "multer": "^2.0.1",
+    "nodemailer": "^7.0.4",
     "path": "^0.12.7"
   }
 }
