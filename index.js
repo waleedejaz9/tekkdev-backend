@@ -23,3 +23,5 @@ app.use("/api/apply", require("./routes/apply"));
 app.use("/api/admin", require("./routes/admin"));
 
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
+
+
