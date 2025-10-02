@@ -10,6 +10,14 @@ const JobSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  keyResponsibilities: {
+    type: [String],
+    default: [],
+  },
+  requirements: {
+    type: [String],
+    default: [],
+  },
   salary: {
     type: String,
     default: "",

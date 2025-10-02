@@ -20,26 +20,55 @@ router.get("/", async (req, res) => {
 // Post a new job
 router.post("/", async (req, res) => {
   try {
-    const { title, description, salary, location, type, createdAt } = req.body;
+    console.log("📥 Incoming create job payload:", req.body);
+    const { title, description, salary, location, type, createdAt, keyResponsibilities, requirements } = req.body;
 
     if (!title || !description) {
       return res.status(400).json({ error: "Title and Description are required" });
     }
 
-    const newJob = new Job({
+    const allowedTypes = ["Full-Time", "Part-Time", "Internship", "Contract"];
+
+    // Build the payload safely; let schema defaults apply when values are missing/invalid
+    const jobPayload = {
       title,
       description,
-      salary,
-      location,
-      type,
-      createdAt,
-    });
+    };
+    if (Array.isArray(keyResponsibilities) && keyResponsibilities.length > 0) {
+      jobPayload.keyResponsibilities = keyResponsibilities;
+    }
+    if (Array.isArray(requirements) && requirements.length > 0) {
+      jobPayload.requirements = requirements;
+    }
+
+    if (typeof salary !== "undefined" && salary !== null && salary !== "") {
+      jobPayload.salary = salary;
+    }
+    if (typeof location !== "undefined" && location !== null && location !== "") {
+      jobPayload.location = location;
+    }
+    if (typeof type !== "undefined" && allowedTypes.includes(type)) {
+      jobPayload.type = type;
+    }
+    // Do not pass createdAt if it's empty/invalid; let default in schema handle it
+    if (createdAt) {
+      jobPayload.createdAt = createdAt;
+    }
+
+    const newJob = new Job(jobPayload);
 
     await newJob.save();
-    res.status(201).json(newJob);
+    return res.status(201).json(newJob);
   } catch (err) {
-    console.error("Error creating job:", err);
-    res.status(500).json({ error: "Server error while creating job" });
+    console.error("Error creating job:", err && err.stack ? err.stack : err);
+    // Always return the actual error message to unblock debugging
+    if (err.name === "ValidationError" || err.name === "CastError") {
+      return res.status(400).json({ error: err.message });
+    }
+    return res.status(500).json({
+      error: err.message || "Server error while creating job",
+      stack: err.stack,
+    });
   }
 });
 
